@@ -1,30 +1,23 @@
 local navios = {
-	Corveta = {tamanho = 2, orientacao = "vertical", "horizontal"},
-	Fragata = {tamanho = 3, orientacao = "vertical", "horizontal"},
-	PortaAvioes = {tamanho = 4, orientacao = "vertical", "horizontal"},
-	Cruzador = {tamanho = 5, orientacao = "vertical", "horizontal"}
+	
 }
 
-function navios:verificarInsercao(tamanho, orientacao, linha, coluna, tabuleiro)
+function navios:getNavios()
+	navios = {
+		Submarino = {id = 1, tamanho = 1}, rgb = {1,1,0}, -- cor amarela
+		Rebocador = {id = 2, tamanho = 2,  rgb = {1,0,0}}, -- cor vermelha
+		Contratorpedo = {id = 3, tamanho = 3, rgb = {0,1,0}}, -- cor verde
+	 	Cruzador = {id = 4, tamanho = 4, rgb = {0,0,1}}, -- cor azul
+		PortaAvioes = {id = 5, tamanho = 5, rgb = {1,0,1}}, -- cor roxa
+	}
 
-	if orientacao == "vertical" then
-		
-		for i = tamanho, 1, -1 do
-			if tabuleiro[linha + (i - tamanho)][coluna] ~= 0 then
-				return false
-			end
-		end
+	return navios
+end
 
-	else 
-
-		for i=0, tamanho -1, 1 do
-			if tabuleiro[linha][coluna + i] ~=  0 then
-				 return false
-			end
-		end
-
+function navios:getId(id)
+	for k,v in pairs(navio:getNavios()) do
+		if v.id == id then return k,v end
 	end
-
-	return true
+end
 
 return navios

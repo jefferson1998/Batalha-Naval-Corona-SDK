@@ -1,2 +1,4 @@
-local tabuleiroView = require "view.tabuleiroView" 
-tabuleiroView:newTabuleiro()
+local jogador = require "model.jogador"
+local texto = require "view.texto"
+local x = display.actualContentWidth
+local y = display.actualContentHeight 

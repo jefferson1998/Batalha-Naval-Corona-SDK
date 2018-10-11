@@ -17,23 +17,89 @@ function tabuleiro:preencherTabuleiro()
 			tabuleiro[i][j] = 0
 		end
 	end
+
 end
 
 tabuleiro:preencherTabuleiro()
 
+---- Verifica inserção do navio ----
 
-function tabuleiro:inserirNavio(navio, linha, coluna, tabuleiro)
+function tabuleiro:verificarInsercao(navio, orientacao, linha, coluna)
 
-	if navio.orientacao == "vertical" then
-		for i = 1, #tamanho do
-			tabuleiro[linha][coluna + i] = navio.tamanho
+	if orientacao.linha > 0 then
+		
+		for i = 0, navio.tamanho - 1 do
+			if tabuleiro[linha + i][coluna] ~= 0 then
+				return false
+			end
 		end
-	else 
-		for i = 1, #tamanho do
+
+	elseif orientacao.linha < 0 then
+		
+		for i = 0, navio.tamanho - 1 do
+			if tabuleiro[linha - i][coluna] ~= 0 then
+				return false
+			end
+		end
+
+	elseif orientacao.coluna > 0 then
+		
+		 i=0, navio.tamanho, 1 do
+			if tabuleiro[linha][coluna + i] ~=  0 then
+				 return false
+			end
+		end
+
+	elseif orientacao.coluna < 0 then
+
+		for i=0, navio.tamanho, 1 do
+			if tabuleiro[linha][coluna - i] ~=  0 then
+				 return false
+			end
+		end
+
+	end
+
+	return true
+end
+
+---- inserção de navio ----
+
+function tabuleiro:inserirNavio(navio, linha, coluna, orientacao)
+	if orientacao.linha > 0 then
+		for i = 0, navio.tamanho -1 do
 			tabuleiro[linha + i][coluna] = navio.tamanho
 		end
+	elseif orientacao.linha < 0 then
+		for i = 0, navio.tamanho -1 do
+			tabuleiro[linha - i][coluna] = navio.tamanho
+		end
+	elseif orientacao.coluna > 0 then
+		for i = 0, navio.tamanho -1 do
+			tabuleiro[linha][coluna + i] = navio.tamanho
+		end
+	 		
+	elseif orientacao.coluna < 0 then
+		for i = 0, navio.tamanho-1 do
+			tabuleiro[linha][coluna - i] = navio.tamanho
+		end
 	end
-	
 end
+
+--- ver tabuleiro ---
+function tabuleiro:viewTabuleiro()
+	local srt = ""
+	for i=1, #tabuleiro do
+		for j=1, #tabuleiro[i] do
+	
+			srt = srt .. tabuleiro[i][j]
+		
+		end
+
+			srt = srt .. "\n"
+	end
+	return str
+
+end 
 
 return tabuleiro
