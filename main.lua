@@ -1,4 +1,10 @@
-local jogador = require "model.jogador"
+local jogador = require "model.Jogador"
+jogador:newJogador("Jefferson")
 local texto = require "view.texto"
-local x = display.actualContentWidth
-local y = display.actualContentHeight 
+
+local tabuleiroView = require "view.tabuleiroView"
+tabuleiroView:newTabuleiro()
+
+
+local jogador2 = require "model.Jogador"
+jogador2:newJogador("Carine")

@@ -3,9 +3,11 @@ local posicaoX, posicaoY = 0, 80
 
 local primeiroToque
 local segundoToque
-
-local espelho = require "model.Tabuleiro"
+local jogador = require "model.Jogador"
+local tabuleiroModel = require "model.Tabuleiro"
 local navios = require "model.Navio"
+
+local id = 2
 
 local tabuleiro = {
 	{},
@@ -19,6 +21,8 @@ local tabuleiro = {
 	{},
 	{},
 }
+
+--- Cria um novo tabuleiro ---
 
 function tabuleiro:newTabuleiro()
 	
@@ -35,72 +39,85 @@ function tabuleiro:newTabuleiro()
 	end
 end
 
-local navio = {tamanho = 4}
+--- Adiciona a jogada no tabuleiro ---
 
 function adicionarJogada(event)
+	
+	local nomeNavio, navioDaVez = navios:getUniqueNavio(id)
 
+	if id <= 5 then
 
-	if event.phase == "began" then
-		if primeiroToque == nil  then
+		if event.phase == "began" then
 
-			primeiroToque = {linha = event.target.linha, coluna = event.target.coluna}
-			event.target:removeEventListener( "touch", adicionarJogada  )
+			if primeiroToque == nil  then
 
-		elseif segundoToque == nil then
+				primeiroToque = {linha = event.target.linha, coluna = event.target.coluna}
+				event.target:removeEventListener( "touch", adicionarJogada  )
 
-			segundoToque = {linha = event.target.linha, coluna = event.target.coluna}
-			event.target:removeEventListener( "touch", adicionarJogada  )
-			
-			local orientacao = tabuleiro:verificaJogada(primeiroToque, segundoToque)
-			
-			if  orientacao ~= nil then
+			elseif segundoToque == nil then
+
+				segundoToque = {linha = event.target.linha, coluna = event.target.coluna}
+				event.target:removeEventListener( "touch", adicionarJogada  )
 				
-				if espelho:verificarInsercao(navio, orientacao, primeiroToque.linha, primeiroToque.coluna) then
-					espelho:inserirNavio(navio, primeiroToque.linha, primeiroToque.coluna, orientacao)
-					tabuleiro:preencherNaviosNaView(navio.tamanho-2, orientacao, event.target.linha, event.target.coluna)
+				local orientacao = tabuleiroModel:verificaJogada(primeiroToque, segundoToque)
+				
+				if  orientacao ~= nil then
+				 	jogador.mapa = 	tabuleiro:atualizaEstadoModel(navioDaVez, orientacao, primeiroToque)
+					tabuleiro:preencherNaviosNaView(navioDaVez, orientacao, event.target.linha, event.target.coluna)
+
 					segundoToque = nil
 					primeiroToque = nil
-				end
+					id = id + 1
 
+				end
+				
 			end
-			
+			event.target:setFillColor(navioDaVez.rgb[1],navioDaVez.rgb[2],navioDaVez.rgb[3])
+			print(mostraTabuleiro(tabuleiroModel))
 		end
-		event.target:setFillColor(1,1,0)
-		print(mostraTabuleiro(espelho))
 	end
-	
 end
 
-function tabuleiro:preencherNaviosNaView(tamanho,orientacao,linha,coluna)
-	for i=1,tamanho do
+---- Preenche o tabuleiro com a cor do navio ----
+
+function tabuleiro:preencherNaviosNaView(navio,orientacao,linha,coluna)
+	for i=1,navio.tamanho - 2 do
 
 		if orientacao.linha > 0 then
-			tabuleiro[linha + i][coluna]:setFillColor(1,1,0)
+			tabuleiro[linha + i][coluna]:setFillColor(navio.rgb[1],navio.rgb[2],navio.rgb[3])
 		elseif orientacao.linha < 0 then
-			tabuleiro[linha - i][coluna]:setFillColor(1,1,0)
+			tabuleiro[linha - i][coluna]:setFillColor(navio.rgb[1],navio.rgb[2],navio.rgb[3])
 		elseif orientacao.coluna > 0 then
-			tabuleiro[linha][coluna + i]:setFillColor(1,1,0)
+			tabuleiro[linha][coluna + i]:setFillColor(navio.rgb[1],navio.rgb[2],navio.rgb[3])
 		else 
-			tabuleiro[linha][coluna - i]:setFillColor(1,1,0)
+			tabuleiro[linha][coluna - i]:setFillColor(navio.rgb[1],navio.rgb[2],navio.rgb[3])
 		end
+
+		navio.tamanho = 0
 
 	end
 
 end
 
 function tabuleiro:verificaJogada(primeiroToque, segundoToque)
+	
 	local orientacao = {linha = segundoToque.linha - primeiroToque.linha,
 					  	coluna = segundoToque.coluna - primeiroToque.coluna}
 
   	if(orientacao.linha ~= 0 and orientacao.coluna ~= 0) then return nil end
 
   	return orientacao
+
 end
 
-function tabuleiro:limparJogadasInvalidas(condicao)
-	if condicao then
-
+function tabuleiro:atualizaEstadoModel(navioDaVez, orientacao, primeiroToque)
+	
+	if tabuleiroModel:verificarInsercao(navioDaVez, orientacao, primeiroToque.linha, primeiroToque.coluna) then
+		tabuleiroModel:inserirNavio(navioDaVez, primeiroToque.linha, primeiroToque.coluna, orientacao)	
 	end
+
+	return tabuleiroModel
+
 end
 
 function mostraTabuleiro(tabuleiro)

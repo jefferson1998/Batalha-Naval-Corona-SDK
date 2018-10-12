@@ -11,6 +11,8 @@ local tabuleiro = {
 	{},
 }
 
+--- Preenche o tabuleiro com 0 ---
+
 function tabuleiro:preencherTabuleiro()
 	for i=1,10 do
 		for j=1,10 do
@@ -63,6 +65,17 @@ function tabuleiro:verificarInsercao(navio, orientacao, linha, coluna)
 	return true
 end
 
+---- verifica jogada ----
+
+function tabuleiro:verificaJogada(primeiroToque, segundoToque)
+	
+	local orientacao = {linha = segundoToque.linha - primeiroToque.linha,
+					  	coluna = segundoToque.coluna - primeiroToque.coluna}
+
+  	if(orientacao.linha ~= 0 and orientacao.coluna ~= 0) then return nil end
+
+  	return orientacao
+end
 ---- inserção de navio ----
 
 function tabuleiro:inserirNavio(navio, linha, coluna, orientacao)
@@ -86,7 +99,10 @@ function tabuleiro:inserirNavio(navio, linha, coluna, orientacao)
 	end
 end
 
+
+
 --- ver tabuleiro ---
+
 function tabuleiro:viewTabuleiro()
 	local srt = ""
 	for i=1, #tabuleiro do
