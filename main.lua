@@ -1,4 +1,5 @@
-local tabuleiroView = require "view.tabuleiroView"
-tabuleiroView:newTabuleiro()
+-- local texto = require "view.texto"
 
-local texto = require "view.texto"
+local composer = require "composer"
+
+composer.gotoScene( "view.tabuleiroJogador1" )

@@ -1,37 +1,38 @@
 local tabuleiro = {
-	{},
-	{},
-	{},
-	{},
-	{},
-	{},
-	{},
-	{},
-	{},
-	{},
+	
 }
 
---- Preenche o tabuleiro com 0 ---
+function tabuleiro:newTabuleiro()
+	local mapa = {
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+	}
 
-function tabuleiro:preencherTabuleiro()
 	for i=1,10 do
 		for j=1,10 do
-			tabuleiro[i][j] = 0
+			mapa[i][j] = 0
 		end
 	end
 
+	return mapa
 end
-
-tabuleiro:preencherTabuleiro()
 
 ---- Verifica inserção do navio ----
 
-function tabuleiro:verificarInsercao(navio, orientacao, linha, coluna)
+function tabuleiro:verificarInsercao(mapa, navio, orientacao, linha, coluna)
 
 	if orientacao.linha > 0 then
 		
 		for i = 0, navio.tamanho - 1 do
-			if tabuleiro[linha + i][coluna] ~= 0 then
+			if mapa[linha + i][coluna] ~= 0 then
 				return false
 			end
 		end
@@ -39,7 +40,7 @@ function tabuleiro:verificarInsercao(navio, orientacao, linha, coluna)
 	elseif orientacao.linha < 0 then
 		
 		for i = 0, navio.tamanho - 1 do
-			if tabuleiro[linha - i][coluna] ~= 0 then
+			if mapa[linha - i][coluna] ~= 0 then
 				return false
 			end
 		end
@@ -47,7 +48,7 @@ function tabuleiro:verificarInsercao(navio, orientacao, linha, coluna)
 	elseif orientacao.coluna > 0 then
 		
 		 i=0, navio.tamanho, 1 do
-			if tabuleiro[linha][coluna + i] ~=  0 then
+			if mapa[linha][coluna + i] ~=  0 then
 				 return false
 			end
 		end
@@ -55,7 +56,7 @@ function tabuleiro:verificarInsercao(navio, orientacao, linha, coluna)
 	elseif orientacao.coluna < 0 then
 
 		for i=0, navio.tamanho, 1 do
-			if tabuleiro[linha][coluna - i] ~=  0 then
+			if mapa[linha][coluna - i] ~=  0 then
 				 return false
 			end
 		end
@@ -63,6 +64,37 @@ function tabuleiro:verificarInsercao(navio, orientacao, linha, coluna)
 	end
 
 	return true
+end
+
+---- inserção de navio ----
+
+function tabuleiro:inserirNavio(jogador, navio, linha, coluna, orientacao)
+	local mapaJogador = jogador.mapa
+	local podeInserir = tabuleiro:verificarInsercao(mapaJogador, navio, orientacao, linha, coluna)
+
+	if podeInserir == true then
+		if orientacao.linha > 0 then
+			for i = 0, navio.tamanho -1 do
+				mapaJogador[linha + i][coluna] = navio.tamanho
+			end
+		elseif orientacao.linha < 0 then
+			for i = 0, navio.tamanho -1 do
+				mapaJogador[linha - i][coluna] = navio.tamanho
+			end
+		elseif orientacao.coluna > 0 then
+			for i = 0, navio.tamanho -1 do
+				mapaJogador[linha][coluna + i] = navio.tamanho
+			end
+		 		
+		elseif orientacao.coluna < 0 then
+			for i = 0, navio.tamanho-1 do
+				mapaJogador[linha][coluna - i] = navio.tamanho
+			end
+		end
+	end
+
+	return podeInserir
+
 end
 
 ---- verifica jogada ----
@@ -76,29 +108,6 @@ function tabuleiro:verificaJogada(primeiroToque, segundoToque)
 
   	return orientacao
 end
----- inserção de navio ----
-
-function tabuleiro:inserirNavio(navio, linha, coluna, orientacao)
-	if orientacao.linha > 0 then
-		for i = 0, navio.tamanho -1 do
-			tabuleiro[linha + i][coluna] = navio.tamanho
-		end
-	elseif orientacao.linha < 0 then
-		for i = 0, navio.tamanho -1 do
-			tabuleiro[linha - i][coluna] = navio.tamanho
-		end
-	elseif orientacao.coluna > 0 then
-		for i = 0, navio.tamanho -1 do
-			tabuleiro[linha][coluna + i] = navio.tamanho
-		end
-	 		
-	elseif orientacao.coluna < 0 then
-		for i = 0, navio.tamanho-1 do
-			tabuleiro[linha][coluna - i] = navio.tamanho
-		end
-	end
-end
-
 
 
 --- ver tabuleiro ---

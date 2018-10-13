@@ -6,8 +6,9 @@ local jogador = {}
 function jogador:newJogador(nome)
 
 	player = { nomeJogador = nome,
-				mapa = tabuleiroModel,
+				mapa = tabuleiroModel:newTabuleiro(),
 				navios = naviosModel:getNavios(),
+				mapaInimigo = "?",
 				insercaoOk = 0,
 				pontuacao = 0}
 

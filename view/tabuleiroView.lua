@@ -1,15 +1,10 @@
 local primeiroToque
 local segundoToque
-
-local jogador = require "model.Jogador"
 local tabuleiroModel = require "model.Tabuleiro"
 local navios = require "model.Navio"
 local controler = require "controler.insercaoDeNavios"
 
 local id = 2
-
-local player = jogador:newJogador("jefssin")
-local player2 = jogador:newJogador("Carine")
 
 local tabuleiro = {}
 
@@ -53,7 +48,7 @@ function adicionarJogada(event)
 	
 	local nomeNavio, navioDaVez = navios:getUniqueNavio(id)
 
-	if id <= 5 then
+	 if tabuleiro.player.insercaoOk <= 5 then
 
 		if event.phase == "began" then
 
@@ -68,28 +63,35 @@ function adicionarJogada(event)
 				event.target:removeEventListener( "touch", adicionarJogada  )
 				
 				local orientacao = tabuleiroModel:verificaJogada(primeiroToque, segundoToque)
-				
+				print(id)
 				if  orientacao ~= nil then
-				 	player.mapa = tabuleiro:atualizaEstadoModel(navioDaVez, orientacao, primeiroToque)
+				 	
+				 	tabuleiroModel:inserirNavio(tabuleiro.player, navioDaVez, primeiroToque.linha, primeiroToque.coluna, orientacao)
+
 					tabuleiro:preencherNaviosNaView(navioDaVez, orientacao, event.target.linha, event.target.coluna)
 
 					segundoToque = nil
 					primeiroToque = nil
 					id = id + 1
 
-					player.insercaoOk = id
-					if controler:verificaInsercaoDeNavios(player) then
-						-- id = 2
-						tabuleiro:newTabuleiro()
+					tabuleiro.player.insercaoOk = id
+					if controler:verificaInsercaoDeNavios(tabuleiro.player) then
+						id = 2
 					end
 
 				end
 				
 			end
 			event.target:setFillColor(navioDaVez.rgb[1],navioDaVez.rgb[2],navioDaVez.rgb[3])
-			print(mostraTabuleiro(player.mapa))
-		end
-	end
+			print(mostraTabuleiro(tabuleiro.player.mapa))
+			print(tabuleiro.player.nomeJogador)
+		 end
+ 	else
+ 		if event.phase == "began" then
+ 			print(tabuleiro.player.nomeJogador)
+ 		end
+ 		
+ 	end
 end
 
 ---- Preenche o tabuleiro com a cor do navio ----
@@ -123,16 +125,22 @@ function tabuleiro:verificaJogada(primeiroToque, segundoToque)
   	return orientacao
 
 end
+
 --- Atualiza o estado do tabuleiro (Model) que irá para o Jogador ---
-function tabuleiro:atualizaEstadoModel(navioDaVez, orientacao, primeiroToque)
+
+function tabuleiro:atualizaEstadoModel(jogador, navioDaVez, primeiroToque, orientacao)
 	
-	if tabuleiroModel:verificarInsercao(navioDaVez, orientacao, primeiroToque.linha, primeiroToque.coluna) then
-		tabuleiroModel:inserirNavio(navioDaVez, primeiroToque.linha, primeiroToque.coluna, orientacao)	
-	end
+	tabuleiroModel:inserirNavio(jogador, navioDaVez, primeiroToque.linha, primeiroToque.coluna, orientacao)	
 
 	return tabuleiroModel
 
 end
+
+function tabuleiro:jogadorDaVez(jogador)
+	tabuleiro.player = jogador 
+	-- body
+end
+
 --- Mostra o estado do tabuleiro (Testes) ---
 function mostraTabuleiro(tabuleiro)
 	local str = ""
