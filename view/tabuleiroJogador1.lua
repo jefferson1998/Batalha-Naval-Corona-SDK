@@ -13,10 +13,11 @@ local mensagem
 local jogador = require "model.Jogador"
 local player 
 local botao 
+
 tabuleiroView:newTabuleiro() 
 player = jogador:newJogador("Jefferson")
-
 tabuleiroView:jogadorDaVez(player)
+
 local function changeScenes()
     composer.gotoScene( "view.tabuleiroJogador2" , {effect = "slideLeft", time = 500 }  )
 end

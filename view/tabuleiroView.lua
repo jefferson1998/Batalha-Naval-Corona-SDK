@@ -82,21 +82,20 @@ function adicionarJogada(event)
 				end
 				
 			end
+
 			event.target:setFillColor(navioDaVez.rgb[1],navioDaVez.rgb[2],navioDaVez.rgb[3])
 			print(mostraTabuleiro(tabuleiro.player.mapa))
 			print(tabuleiro.player.nomeJogador)
+			
 		 end
- 	else
- 		if event.phase == "began" then
- 			print(tabuleiro.player.nomeJogador)
- 		end
- 		
+ 	
  	end
 end
 
 ---- Preenche o tabuleiro com a cor do navio ----
 
 function tabuleiro:preencherNaviosNaView(navio,orientacao,linha,coluna)
+	
 	for i=1,navio.tamanho - 2 do
 
 		if orientacao.linha > 0 then
@@ -114,7 +113,9 @@ function tabuleiro:preencherNaviosNaView(navio,orientacao,linha,coluna)
 	end
 
 end
---- Verifica jogada ---
+
+					--- Verifica jogada ---
+
 function tabuleiro:verificaJogada(primeiroToque, segundoToque)
 	
 	local orientacao = {linha = segundoToque.linha - primeiroToque.linha,
@@ -137,20 +138,26 @@ function tabuleiro:atualizaEstadoModel(jogador, navioDaVez, primeiroToque, orien
 end
 
 function tabuleiro:jogadorDaVez(jogador)
+	
 	tabuleiro.player = jogador 
-	-- body
+	
 end
 
 --- Mostra o estado do tabuleiro (Testes) ---
+
 function mostraTabuleiro(tabuleiro)
+	
 	local str = ""
+
 		for i=1,#tabuleiro do
 			for j=1,#tabuleiro[i] do
 				str =  str .. tabuleiro[i][j]
 			end
 			str = str .. "\n"
 		end
+
 	return str
+
 end
 
 return tabuleiro
