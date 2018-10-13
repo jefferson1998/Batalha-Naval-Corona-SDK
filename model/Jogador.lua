@@ -5,12 +5,13 @@ local jogador = {}
 
 function jogador:newJogador(nome)
 
-	jogador = { nomeJogador = nome,
+	player = { nomeJogador = nome,
 				mapa = tabuleiroModel,
 				navios = naviosModel:getNavios(),
+				insercaoOk = 0,
 				pontuacao = 0}
 
-	return jogador
+	return player
 end
 
 return jogador
