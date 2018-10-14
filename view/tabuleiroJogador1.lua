@@ -14,10 +14,6 @@ local jogador = require "model.Jogador"
 local player 
 local botao 
 
-tabuleiroView:newTabuleiro() 
-player = jogador:newJogador("Jefferson")
-tabuleiroView:jogadorDaVez(player)
-
 local function changeScenes()
     composer.gotoScene( "view.tabuleiroJogador2" , {effect = "slideLeft", time = 500 }  )
 end
@@ -32,6 +28,9 @@ function scene:create( event )
 
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
+    tabuleiroView:newTabuleiro() 
+    player = jogador:newJogador("Jefferson")
+    tabuleiroView:jogadorDaVez(player)
     mensagem = display.newText(player.nomeJogador, display.contentCenterX * 1, display.contentCenterY * 0.1 , native.systemFontBold, 40)
     sceneGroup:insert(mensagem)
     botao = display.newRect( display.contentCenterX * 1, display.contentCenterY * 2,  70, 30 )
@@ -79,6 +78,7 @@ function scene:destroy( event )
  
     local sceneGroup = self.view
     -- Code here runs prior to the removal of scene's view
+
  
 end
  

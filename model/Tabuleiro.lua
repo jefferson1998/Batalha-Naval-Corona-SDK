@@ -91,6 +91,7 @@ function tabuleiro:inserirNavio(jogador, navio, linha, coluna, orientacao)
 				mapaJogador[linha][coluna - i] = navio.tamanho
 			end
 		end
+		-- print(podeInserir)
 	end
 
 	return podeInserir

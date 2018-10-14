@@ -13,13 +13,10 @@ local player
 local tabuleiroView = require "view.tabuleiroView"
 local mensagem
 
-tabuleiroView:newTabuleiro()
-player = jogador:newJogador("Carine")
-tabuleiroView:jogadorDaVez(player)
 
 local function changeScenes()
 
-    composer.gotoScene( "view.teste" , {effect = "slideLeft", time = 500 }  )
+    composer.gotoScene( "view.tabuleiroJogador1" , {effect = "slideRight", time = 500 }  )
 end
  
 -- -----------------------------------------------------------------------------------
@@ -31,6 +28,9 @@ function scene:create( event )
  
     local sceneGroup = self.view
 
+    tabuleiroView:newTabuleiro()
+    player = jogador:newJogador("Carine")
+    tabuleiroView:jogadorDaVez(player)
     mensagem = display.newText(player.nomeJogador, display.contentCenterX * 1, display.contentCenterY * 0.1 , native.systemFontBold, 40)
     sceneGroup:insert(mensagem)
     botao = display.newRect( display.contentCenterX * 1, display.contentCenterY * 2,  70, 30 )

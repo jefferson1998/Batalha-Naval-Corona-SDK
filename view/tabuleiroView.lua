@@ -2,7 +2,6 @@ local primeiroToque
 local segundoToque
 local tabuleiroModel = require "model.Tabuleiro"
 local navios = require "model.Navio"
-local controler = require "controler.insercaoDeNavios"
 
 local id = 2
 
@@ -56,39 +55,37 @@ function adicionarJogada(event)
 
 				primeiroToque = {linha = event.target.linha, coluna = event.target.coluna}
 				event.target:removeEventListener( "touch", adicionarJogada  )
-
+				
 			elseif segundoToque == nil then
 
 				segundoToque = {linha = event.target.linha, coluna = event.target.coluna}
 				event.target:removeEventListener( "touch", adicionarJogada  )
 				
 				local orientacao = tabuleiroModel:verificaJogada(primeiroToque, segundoToque)
-				print(id)
+	
 				if  orientacao ~= nil then
-				 	
-				 	tabuleiroModel:inserirNavio(tabuleiro.player, navioDaVez, primeiroToque.linha, primeiroToque.coluna, orientacao)
 
-					tabuleiro:preencherNaviosNaView(navioDaVez, orientacao, event.target.linha, event.target.coluna)
+				 	if tabuleiro:atualizaEstadoModel(tabuleiro.player, navioDaVez, 
+				 		primeiroToque, orientacao) then
 
-					segundoToque = nil
-					primeiroToque = nil
-					id = id + 1
+					 	tabuleiro:preencherNaviosNaView(navioDaVez, orientacao, event.target.linha, event.target.coluna)
 
-					tabuleiro.player.insercaoOk = id
-					if controler:verificaInsercaoDeNavios(tabuleiro.player) then
-						id = 2
+						segundoToque = nil
+						primeiroToque = nil
+						id = id + 1
+						tabuleiro.player.insercaoOk = id
+						
+							if tabuleiro.player.insercaoOk == 6 then
+								id = 2
+							end
 					end
-
 				end
-				
 			end
-
 			event.target:setFillColor(navioDaVez.rgb[1],navioDaVez.rgb[2],navioDaVez.rgb[3])
 			print(mostraTabuleiro(tabuleiro.player.mapa))
 			print(tabuleiro.player.nomeJogador)
-			
+
 		 end
- 	
  	end
 end
 
@@ -100,12 +97,16 @@ function tabuleiro:preencherNaviosNaView(navio,orientacao,linha,coluna)
 
 		if orientacao.linha > 0 then
 			tabuleiro.tabuleiroCriado[linha + i][coluna]:setFillColor(navio.rgb[1],navio.rgb[2],navio.rgb[3])
+			tabuleiro.tabuleiroCriado[linha + i][coluna]:removeEventListener( "touch", adicionarJogada  )
 		elseif orientacao.linha < 0 then
 			tabuleiro.tabuleiroCriado[linha - i][coluna]:setFillColor(navio.rgb[1],navio.rgb[2],navio.rgb[3])
+			tabuleiro.tabuleiroCriado[linha - i][coluna]:removeEventListener( "touch", adicionarJogada  )
 		elseif orientacao.coluna > 0 then
 			tabuleiro.tabuleiroCriado[linha][coluna + i]:setFillColor(navio.rgb[1],navio.rgb[2],navio.rgb[3])
+			tabuleiro.tabuleiroCriado[linha][coluna + i]:removeEventListener( "touch", adicionarJogada  )
 		else 
 			tabuleiro.tabuleiroCriado[linha][coluna - i]:setFillColor(navio.rgb[1],navio.rgb[2],navio.rgb[3])
+			tabuleiro.tabuleiroCriado[linha][coluna - i]:removeEventListener( "touch", adicionarJogada  )
 		end
 
 		navio.tamanho = 0
@@ -130,13 +131,13 @@ end
 --- Atualiza o estado do tabuleiro (Model) que irá para o Jogador ---
 
 function tabuleiro:atualizaEstadoModel(jogador, navioDaVez, primeiroToque, orientacao)
-	
-	tabuleiroModel:inserirNavio(jogador, navioDaVez, primeiroToque.linha, primeiroToque.coluna, orientacao)	
-
-	return tabuleiroModel
+	local atualizado =  tabuleiroModel:inserirNavio(jogador, navioDaVez, primeiroToque.linha,
+						primeiroToque.coluna, orientacao)	
+	return atualizado
 
 end
 
+--- Pega o jogador da vez ao criar o novo tabuleiro ---
 function tabuleiro:jogadorDaVez(jogador)
 	
 	tabuleiro.player = jogador 

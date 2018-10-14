@@ -1,5 +1,4 @@
 local composer = require( "composer" )
- 
 local scene = composer.newScene()
  
 -- -----------------------------------------------------------------------------------
@@ -7,7 +6,8 @@ local scene = composer.newScene()
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
  
- 
+local player 
+local botao 
  
  
 -- -----------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ function scene:create( event )
  
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
- 
+    
 end
  
  
